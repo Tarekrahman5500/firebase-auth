@@ -8,7 +8,8 @@ import {
     signInWithEmailAndPassword,
     sendEmailVerification,
     sendPasswordResetEmail,
-    updateProfile
+    updateProfile,
+    FacebookAuthProvider
 } from "firebase/auth";
 import InitializeAuth from "../Firebase/firebase.initialize";
 import {useState} from "react";
@@ -18,6 +19,8 @@ InitializeAuth()
 const provider = new GoogleAuthProvider();
 
 const GitProvider = new GithubAuthProvider();
+
+const FBProvider = new FacebookAuthProvider();
 
 const GoggleGit = () => {
 
@@ -75,15 +78,36 @@ const GoggleGit = () => {
                 // ...
             }).catch((error) => {
             // Handle Errors here.
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            // The email of the user's account used.
-            const email = error.customData.email;
-            // The AuthCredential type that was used.
-            const credential = GithubAuthProvider.credentialFromError(error);
-            // ...
+            setError(error.message)
         });
 
+    }
+
+    const handleFBSignInWithPopup = () => {
+
+        signInWithPopup(auth, FBProvider)
+            .then((result) => {
+                // The signed-in user info.
+                console.log(result.user)
+
+                // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+                const credential = FacebookAuthProvider.credentialFromResult(result);
+                const accessToken = credential.accessToken;
+                // The signed-in user info.
+                const {displayName, email, photoURL} = result.user
+                const logInUser = {
+                    name: displayName,
+                    email: email,
+                    photo: photoURL,
+                }
+                SetUser(logInUser)
+
+                // ...
+            })
+            .catch((error) => {
+                // Handle Errors here.
+                setError(error.message)
+            });
     }
 
     const handleSignOut = () => {
@@ -276,12 +300,13 @@ const GoggleGit = () => {
                     <>
                         <button onClick={handleGoogleSignInWithPopup}>Google Sign in</button>
                         <button onClick={handleGithubSignInWithPopup}>Github Sign in</button>
+                        <button onClick={handleFBSignInWithPopup}>Fb Sign in</button>
                     </> :
                     <button onClick={handleSignOut}>Sign out</button>
                 }
                 <br/>
                 {
-                    user.email &&
+                    user.email  &&
                     <>
                         <h2>Name: {user.name}</h2>
                         <p>Email: {user.email}</p>
