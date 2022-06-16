@@ -13,14 +13,7 @@ const UseFireBase = () => {
 
     const SignInWithGoogle = () => {
 
-        signInWithPopup(auth, GoogleProvider)
-            .then((result) => {
-
-                console.log(result.user)
-                setUser(result.user);
-            }).catch((error) => {
-            setError(error.message)
-        });
+      return   signInWithPopup(auth, GoogleProvider)
 
     }
     useEffect(() => {
@@ -42,6 +35,7 @@ const UseFireBase = () => {
     return {
         user,
         error,
+        setError,
         SignInWithGoogle,
         SignOut
     }

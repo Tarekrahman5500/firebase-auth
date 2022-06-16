@@ -24,7 +24,7 @@ function App() {
                         </Route>
                         <Route path="/register" element={<Register/>}>
                         </Route>
-                         <Route path="/" element={<PrivateRoute/>}>
+                         <Route path="/*" element={<PrivateRoute/>}>
                             <Route path='shipping' element={<Shipping />}/>
                             <Route path='order' element={<PlaceOrder/>}/>
                         </Route>
